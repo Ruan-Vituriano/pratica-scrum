@@ -83,14 +83,57 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding: 12px 16px;
   background-color: #fff;
   border-radius: 6px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
 .lista-tarefas .tarefa + .tarefa {
   margin-top: 8px;
+}
+
+.titulo-tarefa {
+  flex: 1;
+  word-break: break-word;
+  transition: color 0.3s ease;
+}
+
+.status-tarefa {
+  width: 18px;
+  height: 18px;
+  accent-color: #27ae60;
+  cursor: pointer;
+}
+
+.rotulo-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #2f3640;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.rotulo-status:hover {
+  color: #40739e;
+}
+
+.tarefa.concluida {
+  background-color: #d4edda;
+  box-shadow: inset 4px 0 0 #27ae60;
+}
+
+.tarefa.concluida .titulo-tarefa {
+  color: #1e8449;
+}
+
+.tarefa.concluida .rotulo-status {
+  color: #1e8449;
 }
 
 .mensagem-vazia {

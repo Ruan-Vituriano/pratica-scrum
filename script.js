@@ -4,11 +4,42 @@ const listaTarefas = document.getElementById("lista-tarefas");
 const mensagemVazia = document.getElementById("mensagem-vazia");
 
 const TEXTO_VAZIO_OBRIGATORIO = "Digite um título para a tarefa.";
+const TAREFAS_INICIAIS = [
+  "Estudar Scrum",
+  "Comprar mantimentos",
+  "Responder e-mails",
+  "Fazer exercícios",
+];
+
+function criarCheckboxStatus() {
+  const rotulo = document.createElement("label");
+  rotulo.className = "rotulo-status";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.className = "status-tarefa";
+  checkbox.setAttribute("aria-label", "Marcar tarefa como concluída");
+
+  const texto = document.createElement("span");
+  texto.textContent = "Concluída";
+
+  rotulo.appendChild(checkbox);
+  rotulo.appendChild(texto);
+
+  return rotulo;
+}
 
 function criarElementoTarefa(titulo) {
   const item = document.createElement("li");
   item.className = "tarefa";
-  item.textContent = titulo;
+
+  const tituloTarefa = document.createElement("span");
+  tituloTarefa.className = "titulo-tarefa";
+  tituloTarefa.textContent = titulo;
+
+  item.appendChild(tituloTarefa);
+  item.appendChild(criarCheckboxStatus());
+
   return item;
 }
 
@@ -34,12 +65,35 @@ function atualizarMensagemVazia() {
   mensagemVazia.classList.toggle("oculto", listaTarefas.children.length > 0);
 }
 
-function adicionarTarefa(titulo) {
+function exibirTarefa(titulo) {
   const item = criarElementoTarefa(titulo);
   listaTarefas.appendChild(item);
+  atualizarMensagemVazia();
+}
+
+function adicionarTarefa(titulo) {
+  exibirTarefa(titulo);
   campoTitulo.value = "";
   campoTitulo.focus();
-  atualizarMensagemVazia();
+}
+
+function carregarTarefasIniciais() {
+  TAREFAS_INICIAIS.forEach(exibirTarefa);
+}
+
+function atualizarConclusao(item, concluida) {
+  item.classList.toggle("concluida", concluida);
+}
+
+function lidarComMudancaDeStatus(evento) {
+  const checkbox = evento.target;
+
+  if (!checkbox.matches('input[type="checkbox"].status-tarefa')) {
+    return;
+  }
+
+  const item = checkbox.closest(".tarefa");
+  atualizarConclusao(item, checkbox.checked);
 }
 
 function lidarComSubmit(evento) {
@@ -60,7 +114,10 @@ function lidarComSubmit(evento) {
 }
 
 formulario.addEventListener("submit", lidarComSubmit);
+listaTarefas.addEventListener("change", lidarComMudancaDeStatus);
 campoTitulo.addEventListener("input", () => {
   limparErro();
   marcarCampoComoInvalido(true);
 });
+
+carregarTarefasIniciais();
